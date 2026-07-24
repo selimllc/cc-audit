@@ -1,0 +1,21 @@
+# cc-audit runtime artifacts
+.cc-audit/
+
+# local Claude Code config (contains machine-specific hook paths + backups)
+.claude/
+CLAUDE.md
+
+# environments & caches
+.venv/
+__pycache__/
+.pytest_cache/
+
+# build artifacts
+build/
+dist/
+*.egg-info/
+
+# secrets
+.env
+.env.*
+*.pem

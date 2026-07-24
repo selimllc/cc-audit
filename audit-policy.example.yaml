@@ -1,0 +1,28 @@
+# cc-audit policy file.
+# Copy to audit-policy.yaml in your project root and edit as needed.
+# If this file is missing, cc-audit falls back to the built-in defaults shown below.
+# If the file exists but cannot be parsed, cc-audit FAILS CLOSED: it enforces the
+# built-in defaults and logs a policy-error event on every hook invocation.
+
+# Glob patterns matched against the absolute target path of Read/Write/Edit calls.
+# Patterns starting with ~ are expanded to the user's home directory.
+blocked_paths:
+  - "**/.env"
+  - "**/.env.*"
+  - "**/*.pem"
+  - "**/credentials*"
+  - "~/.ssh/**"
+
+# Regex patterns (case-insensitive) matched against Bash command strings.
+blocked_commands:
+  # rm -rf (any flag order) aimed at root-ish paths: /, ~, $HOME, %USERPROFILE%, C:\ ...
+  - '\brm\s+(?:-[a-zA-Z]+\s+)*-(?:[a-zA-Z]*r[a-zA-Z]*f|[a-zA-Z]*f[a-zA-Z]*r)[a-zA-Z]*\s+["'']?(?:/|~|\$HOME|%USERPROFILE%|[A-Za-z]:[\\/])["'']?\s*$'
+  # curl sending local data out
+  - '\bcurl\b[^|;&]*(?:\s-d\b|--data\S*|--upload-file|\s-T\b|\s-F\b|--form)'
+  # wget posting local data out
+  - '\bwget\b[^|;&]*(?:--post-data|--post-file|--body-data|--body-file)'
+  # PowerShell-native exfiltration
+  - '\b(?:Invoke-WebRequest|Invoke-RestMethod|iwr|irm)\b[^|;&]*(?:-Body\b|-InFile\b|-Method\s+Post\b)'
+
+# If true, nothing is ever blocked; matching events are logged with decision "log_only".
+log_only: false
