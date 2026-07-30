@@ -133,7 +133,7 @@ Blocked events never appear under "Files touched" or "Commands executed" — tho
 
 ## Limitations
 
-- Windows-tested only so far. The code uses `pathlib` throughout and should be portable, but macOS/Linux are unverified.
+- Verified on Windows and Linux (tested in a `python:3.11` Docker container on Debian; all 25 tests passing). macOS is untested but should work given the `pathlib`-based implementation.
 - Depends on Claude Code's hook API (payload shape, exit-code semantics). That API may change.
 - Per-project install: `init` must be run in each project, and the hook only guards sessions started in that project.
 - `blocked_commands` is regex matching, and regexes are bypassable — encodings, interpolation, writing a script and running it. cc-audit is an audit layer that raises the bar and leaves a record; it is **not** a sandbox. If you need containment, run the agent in one.
